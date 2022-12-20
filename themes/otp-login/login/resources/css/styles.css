@@ -1,16 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap');
-
-#kc-page-title {
- font-family: 'Montserrat', sans-serif;
-}
-
 .login-pf body {
     background-color: #FFFFFF;
     background: none;
-}
-
-.card-pf {
-    border-color: #8751FE;
 }
 
 .otp-form-hr {
@@ -18,33 +8,10 @@
     border: 1px solid #000000;
 }
 
-#kc-header-wrapper {
-    display: none;
-}
-
 .pf-c-button.pf-m-primary {
-    background: linear-gradient(90deg, #752DF0 0%, #302692 100%);
-    border-radius: 46px;
     padding: 10px;
     height: 55px;
     margin-bottom: 10px;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.pf-c-form-control {
-    --pf-c-form-control--BorderTopColor: #8751FE;
-    --pf-c-form-control--BorderRightColor: #8751FE;
-    --pf-c-form-control--BorderLeftColor: #8751FE;
-    --pf-c-form-control--hover--BorderBottomColor: #8751FE;
-    --pf-c-form-control--focus--BorderBottomColor: #8751FE;
-    --pf-c-form-control--m-expanded--BorderBottomColor: #8751FE;
-    --pf-c-form-control--readonly--focus--BorderBottomColor: #8751FE;
-    --pf-c-form-control--readonly--hover--BorderBottomColor: #8751FE;
-
-}
-
-.pf-c-form-control:focus {
-    --pf-c-form-control--BorderBottomColor: #8751FE;
 }
 
 #kc-select-try-another-way-form {
@@ -52,7 +19,6 @@
 }
 
 .login-pf-page .card-pf p {
-    font-family: 'Open Sans', sans-serif;
     color: #7C7C7C;
     font-size: 14px;
     margin: 20px 0px 5px 0px;
@@ -65,8 +31,7 @@
     border-radius: 2px;
     width: 52.8px;
     height: 50px;
-    padding: px 0px;
-    font-family: 'Open Sans', sans-serif;
+    text-align: center;
     display: flex;
     align-items: center;
     color: #212529;

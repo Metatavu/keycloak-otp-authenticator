@@ -16,7 +16,6 @@ import java.util.List;
  */
 @AutoService(AuthenticatorFactory.class)
 public class OtpPhoneNumberFormFactory implements AuthenticatorFactory {
-    public static final String PROVIDER_ID = "OTP_PHONE_NUMBER_FORM";
     public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES;
 
     public Authenticator create(KeycloakSession session) {
@@ -36,7 +35,7 @@ public class OtpPhoneNumberFormFactory implements AuthenticatorFactory {
     }
 
     public String getId() {
-        return PROVIDER_ID;
+        return OtpPhoneNumberForm.ID;
     }
 
     public String getReferenceCategory() {
