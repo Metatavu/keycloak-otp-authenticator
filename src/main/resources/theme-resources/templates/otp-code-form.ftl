@@ -8,15 +8,13 @@
                 <#if realm.password>
                     <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}"
                           method="post">
-                        <div class="${properties.kcFormGroupClass!}">
-                            <label for="otpCode"
-                                   class="${properties.kcLabelClass!}">${msg("otpCodeInputLabel")}</label>
-
-                                <input tabindex="1" id="otpCode"
-                                       aria-invalid="<#if messagesPerField.existsError('otpCode')>true</#if>"
-                                       class="${properties.kcInputClass!}" name="otpCode"
-                                       type="number" autofocus autocomplete="off"/>
-
+                        <div class="${properties.customFormGroupClass!}">
+                        <#list 1..codeLength as item>
+                            <input class="${properties.customInputClass}"
+                                name="code-${item}"
+                                required
+                                type="number"/>
+                        </#list>
                             <#if messagesPerField.existsError('otpCode')>
                                 <span id="input-error-otpCode" class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
                                     ${kcSanitize(messagesPerField.get('otpCode'))?no_esc}

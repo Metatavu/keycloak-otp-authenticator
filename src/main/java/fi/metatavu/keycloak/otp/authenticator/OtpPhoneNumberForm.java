@@ -1,6 +1,8 @@
 package fi.metatavu.keycloak.otp.authenticator;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.authenticators.browser.UsernamePasswordForm;
@@ -13,14 +15,17 @@ import org.keycloak.models.utils.FormMessage;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * Authenticator for initiating OTP login with phone number
+ */
 public class OtpPhoneNumberForm extends UsernamePasswordForm {
+    static final String ID = "otp-phone-number-authenticator-form";
     public static final String PHONE_NUMBER_ATTRIBUTE_NAME = "PHONE_NUMBER";
     public static final String PHONE_NUMBER_FORM_FIELD = "phoneNumber";
     private static final String USER_NOT_FOUND_MESSAGE = "User with provided phone number could not be found.";
     private static final String INVALID_PHONE_NUMBER_MESSAGE = "Invalid phone number.";
-    public OtpPhoneNumberForm() {
-    }
 
     /**
      * This method is being run by Keycloak upon executing.
@@ -38,7 +43,7 @@ public class OtpPhoneNumberForm extends UsernamePasswordForm {
             }
         }
 
-        if (OtpConstants.OTP_STRATEGY_SMS.equals(context.getAuthenticationSession().getAuthNote(OtpConstants.OTP_STRATEGY_EMAIL))) {
+        if (OtpConstants.OTP_STRATEGY_SMS.equals(context.getAuthenticationSession().getAuthNote(OtpConstants.OTP_STRATEGY))) {
             super.authenticate(context);
         } else {
             context.success();
@@ -93,7 +98,7 @@ public class OtpPhoneNumberForm extends UsernamePasswordForm {
     @Override
     protected Response challenge(AuthenticationFlowContext context, MultivaluedMap<String, String> formData) {
         LoginFormsProvider form = context.form();
-        if (!formData.isEmpty()) {
+        if (formData != null) {
             form.setFormData(formData);
         }
 

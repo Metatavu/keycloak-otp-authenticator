@@ -11,14 +11,16 @@ import org.keycloak.provider.ProviderConfigProperty;
 
 import java.util.List;
 
+/**
+ * Authenticator provider factory for OTP Phone Number Authenticator
+ */
 @AutoService(AuthenticatorFactory.class)
 public class OtpPhoneNumberFormFactory implements AuthenticatorFactory {
     public static final String PROVIDER_ID = "OTP_PHONE_NUMBER_FORM";
-    public static final OtpPhoneNumberForm SINGLETON = new OtpPhoneNumberForm();
     public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES;
 
     public Authenticator create(KeycloakSession session) {
-        return SINGLETON;
+        return new OtpPhoneNumberForm();
     }
 
     public void init(Config.Scope config) {

@@ -13,10 +13,15 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+/**
+ * Authenticator providing a form for selecting Email or SMS OTP
+ */
 @JBossLog
 public class OtpStrategyForm implements Authenticator {
 
-    static final String ID = "email-otp-form";
+    static final String ID = "otp-strategy-form";
+    private final String EMAIL_FORM_KEY = "email";
+    private final String SMS_FORM_KEY = "sms";
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
@@ -34,13 +39,13 @@ public class OtpStrategyForm implements Authenticator {
     @Override
     public void action(AuthenticationFlowContext context) {
         MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
-        if (formData.containsKey("email")) {
+        if (formData.containsKey(EMAIL_FORM_KEY)) {
             context.getAuthenticationSession().setAuthNote(OtpConstants.OTP_STRATEGY, OtpConstants.OTP_STRATEGY_EMAIL);
-        } else if (formData.containsKey("sms")) {
+        } else if (formData.containsKey(SMS_FORM_KEY)) {
             context.getAuthenticationSession().setAuthNote(OtpConstants.OTP_STRATEGY, OtpConstants.OTP_STRATEGY_SMS);
         }
 
-        context.attempted();
+        context.success();
     }
     @Override
     public boolean requiresUser() {

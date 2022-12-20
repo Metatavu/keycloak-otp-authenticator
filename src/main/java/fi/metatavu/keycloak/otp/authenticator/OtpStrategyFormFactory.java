@@ -11,17 +11,18 @@ import org.keycloak.provider.ProviderConfigProperty;
 
 import java.util.List;
 
+/**
+ * Authenticator provider factory for OTP Strategy Authenticator
+ */
 @AutoService(AuthenticatorFactory.class)
 public class OtpStrategyFormFactory implements AuthenticatorFactory {
-    public static final String PROVIDER_ID = "otp-strategy-form";
-    public static final OtpStrategyForm SINGLETON = new OtpStrategyForm();
     public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES;
 
     public OtpStrategyFormFactory() {
     }
 
     public Authenticator create(KeycloakSession session) {
-        return SINGLETON;
+        return new OtpStrategyForm();
     }
 
     public void init(Config.Scope config) {
@@ -34,7 +35,7 @@ public class OtpStrategyFormFactory implements AuthenticatorFactory {
     }
 
     public String getId() {
-        return PROVIDER_ID;
+        return OtpStrategyForm.ID;
     }
 
     public String getReferenceCategory() {

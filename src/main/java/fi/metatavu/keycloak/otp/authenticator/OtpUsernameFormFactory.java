@@ -11,14 +11,15 @@ import org.keycloak.provider.ProviderConfigProperty;
 
 import java.util.List;
 
+/**
+ * Authenticator provider factory for OTP Username Authenticator
+ */
 @AutoService(AuthenticatorFactory.class)
 public class OtpUsernameFormFactory implements AuthenticatorFactory {
-    public static final String PROVIDER_ID = "OTP_USERNAME_FORM";
-    public static final OtpUsernameForm SINGLETON = new OtpUsernameForm();
     public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES;
 
     public Authenticator create(KeycloakSession session) {
-        return SINGLETON;
+        return new OtpUsernameForm();
     }
 
     public void init(Config.Scope config) {
@@ -31,7 +32,7 @@ public class OtpUsernameFormFactory implements AuthenticatorFactory {
     }
 
     public String getId() {
-        return PROVIDER_ID;
+        return OtpUsernameForm.ID;
     }
 
     public String getReferenceCategory() {

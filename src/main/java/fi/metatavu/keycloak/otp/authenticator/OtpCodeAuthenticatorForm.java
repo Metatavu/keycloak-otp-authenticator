@@ -28,18 +28,26 @@ import java.util.Map;
 
 import static fi.metatavu.keycloak.otp.authenticator.OtpConstants.*;
 
+/**
+ * Authenticator for sending and verifying OTP code
+ */
 @JBossLog
 public class OtpCodeAuthenticatorForm implements Authenticator {
 
     static final String ID = "otp-code-authenticator-form";
-    private static final Integer OTP_CODE_LENGTH = ConfigProvider.getConfig().getValue("kc.otp.length", Integer.class);
     private static final String TWILIO_ACCOUNT_SID = ConfigProvider.getConfig().getValue("kc.twilio.account.sid", String.class);
     private static final String TWILIO_AUTH_TOKEN = ConfigProvider.getConfig().getValue("kc.twilio.auth.token", String.class);
     private static final String TWILIO_PHONE_NUMBER = ConfigProvider.getConfig().getValue("kc.twilio.phone.number", String.class);
 
-    private KeycloakSession session;
+    private final KeycloakSession session;
 
+    /**
+     * Constructor
+     *
+     * @param session Keycloak session
+     */
     public OtpCodeAuthenticatorForm(KeycloakSession session) {
+        Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
         this.session = session;
     }
 
@@ -61,60 +69,44 @@ public class OtpCodeAuthenticatorForm implements Authenticator {
      * @param errorMessage error message
      */
     private void challenge(AuthenticationFlowContext context, FormMessage errorMessage) {
-        generateAndSendOtpCode(context);
+        final Map<String, String> authenticatorConfig = context.getAuthenticatorConfig().getConfig();
+        final int otpCodeLength = Integer.parseInt(authenticatorConfig.get(OtpConstants.OTP_CODE_LENGTH_CONFIG));
+
+        generateAndSendOtpCode(context, otpCodeLength);
 
         LoginFormsProvider form = context.form().setExecution(context.getExecution().getId());
         if (errorMessage != null) {
             form.setErrors(List.of(errorMessage));
         }
 
-        Response response = form.createForm("otp-code-form.ftl");
+        Response response = form
+                .setAttribute("codeLength", otpCodeLength)
+                .createForm("otp-code-form.ftl");
         context.challenge(response);
     }
 
     /**
-     * Generates SMS OTP code and sends it.
+     * Generates OTP code and sends it via SMS or Email.
      *
      * @param context Authentication flow context
+     * @param otpCodeLength Length of the code to be generated
      */
-    private void generateAndSendOtpCode(AuthenticationFlowContext context) {
+    private void generateAndSendOtpCode(AuthenticationFlowContext context, Integer otpCodeLength) {
         if (context.getAuthenticationSession().getAuthNote(OTP_AUTH_NOTE) != null) {
             return;
         }
 
-        String otpCode = SecretGenerator.getInstance().randomString(OTP_CODE_LENGTH, SecretGenerator.DIGITS);
+        String otpCode = SecretGenerator.getInstance().randomString(otpCodeLength, SecretGenerator.DIGITS);
         String otpStrategy = context.getAuthenticationSession().getAuthNote(OTP_STRATEGY);
 
         context.getAuthenticationSession().setAuthNote(OTP_AUTH_NOTE, otpCode);
 
-        if (OTP_STRATEGY_EMAIL.equals(otpStrategy)) {
-            sendEmailWithCode(context.getRealm(), context.getUser(), otpCode);
-        }
-
-        if (OTP_STRATEGY_SMS.equals(otpStrategy)) {
-            sendSmsWithCode(context.getRealm(), context.getUser(), otpCode);
-        }
-    }
-
-    private void sendEmailWithCode(RealmModel realm, UserModel user, String code) {
-        if (user.getEmail() == null) {
-            log.warnf("Could not send access code email due to missing email. realm=%s user=%s", realm.getId(), user.getUsername());
-            throw new AuthenticationFlowException(AuthenticationFlowError.INVALID_USER);
-        }
-
-        Map<String, Object> mailBodyAttributes = new HashMap<>();
-        mailBodyAttributes.put("code", code);
-
-        String realmName = realm.getDisplayName() != null ? realm.getDisplayName() : realm.getName();
-        List<Object> subjectParams = List.of(realmName);
-        try {
-            EmailTemplateProvider emailProvider = session.getProvider(EmailTemplateProvider.class);
-            emailProvider.setRealm(realm);
-            emailProvider.setUser(user);
-
-            emailProvider.send("emailCodeSubject", subjectParams, "otp-email.ftl", mailBodyAttributes);
-        } catch (EmailException eex) {
-            log.errorf(eex, "Failed to send access code email. realm=%s user=%s", realm.getId(), user.getUsername());
+        switch (otpStrategy) {
+            case OTP_STRATEGY_EMAIL: sendEmailWithCode(context.getRealm(), context.getUser(), otpCode);
+                break;
+            case OTP_STRATEGY_SMS: sendSmsWithCode(context.getRealm(), context.getUser(), otpCode);
+                break;
+            default: throw new AuthenticationFlowException(AuthenticationFlowError.GENERIC_AUTHENTICATION_ERROR);
         }
     }
 
@@ -127,7 +119,10 @@ public class OtpCodeAuthenticatorForm implements Authenticator {
      */
     @Override
     public void action(AuthenticationFlowContext context) {
+        final Map<String, String> authenticatorConfig = context.getAuthenticatorConfig().getConfig();
+        final int otpCodeLength = Integer.parseInt(authenticatorConfig.get(OtpConstants.OTP_CODE_LENGTH_CONFIG));
         MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
+
         if (formData.containsKey(RESEND_CODE_FIELD_NAME)) {
             resetOtpCode(context);
             challenge(context, null);
@@ -139,20 +134,22 @@ public class OtpCodeAuthenticatorForm implements Authenticator {
             context.resetFlow();
             return;
         }
-
-        if (formData.getFirst(SUBMITTED_OTP_CODE) != null) {
-            int givenSmsCode = Integer.parseInt(formData.getFirst(SUBMITTED_OTP_CODE));
-            boolean valid = validateCode(context, givenSmsCode);
-
-            if (!valid) {
-                context.getEvent().error(Errors.INVALID_USER_CREDENTIALS);
-                challenge(context, new FormMessage(Messages.INVALID_ACCESS_CODE));
-                return;
-            }
-
-            resetOtpCode(context);
-            context.success();
+        StringBuilder submittedCode = new StringBuilder();
+        for (int i = 1; i <= otpCodeLength; i++) {
+            submittedCode.append(formData.getFirst(String.format("code-%s", i)));
         }
+
+        int givenSmsCode = Integer.parseInt(String.valueOf(submittedCode));
+        boolean valid = validateCode(context, givenSmsCode);
+
+        if (!valid) {
+            context.getEvent().error(Errors.INVALID_USER_CREDENTIALS);
+            challenge(context, new FormMessage(Messages.INVALID_ACCESS_CODE));
+            return;
+        }
+
+        resetOtpCode(context);
+        context.success();
     }
 
     /**
@@ -176,15 +173,46 @@ public class OtpCodeAuthenticatorForm implements Authenticator {
         return givenCode == smsCode;
     }
 
+
+    /**
+     * Sends Email with OTP code to user.
+     * Throws error if email is not found on user.
+     *
+     * @param realm realm
+     * @param user user
+     * @param otpCode otp code
+     */
+    private void sendEmailWithCode(RealmModel realm, UserModel user, String otpCode) {
+        if (user.getEmail() == null) {
+            log.warnf("Could not send access code email due to missing email. realm=%s user=%s", realm.getId(), user.getUsername());
+            throw new AuthenticationFlowException(AuthenticationFlowError.INVALID_USER);
+        }
+
+        Map<String, Object> mailBodyAttributes = new HashMap<>();
+        mailBodyAttributes.put("code", otpCode);
+
+        String realmName = realm.getDisplayName() != null ? realm.getDisplayName() : realm.getName();
+        List<Object> subjectParams = List.of(realmName);
+        try {
+            EmailTemplateProvider emailProvider = session.getProvider(EmailTemplateProvider.class);
+            emailProvider.setRealm(realm);
+            emailProvider.setUser(user);
+
+            emailProvider.send("emailCodeSubject", subjectParams, "otp-email.ftl", mailBodyAttributes);
+        } catch (EmailException eex) {
+            log.errorf(eex, "Failed to send access code email. realm=%s user=%s", realm.getId(), user.getUsername());
+        }
+    }
+
     /**
      * Sends SMS with OTP code to user.
      * Throws error if phone number is not found on user.
      *
-     * @param realm realm
+     * @realm realm
      * @param user user
-     * @param smsCode sms code
+     * @param otpCode otp code
      */
-    private void sendSmsWithCode(RealmModel realm, UserModel user, String smsCode) {
+    private void sendSmsWithCode(RealmModel realm, UserModel user, String otpCode) {
         String userPhoneNumber = user.getFirstAttribute(OtpPhoneNumberForm.PHONE_NUMBER_ATTRIBUTE_NAME);
 
         if (userPhoneNumber == null) {
@@ -192,11 +220,10 @@ public class OtpCodeAuthenticatorForm implements Authenticator {
             throw new AuthenticationFlowException(AuthenticationFlowError.INVALID_USER);
         }
 
-        Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
         Message.creator(
                 new PhoneNumber(userPhoneNumber),
                 new PhoneNumber(TWILIO_PHONE_NUMBER),
-                String.format("Your one time code for Votech is: %s", smsCode)
+                String.format("Your one time code for Votech is: %s", otpCode)
         ).create();
     }
 

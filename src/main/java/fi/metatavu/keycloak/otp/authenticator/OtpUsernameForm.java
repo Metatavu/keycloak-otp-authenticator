@@ -12,10 +12,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+/**
+ * Authenticator for initiating OTP login with email.
+ */
 public class OtpUsernameForm extends UsernamePasswordForm {
-
-    public OtpUsernameForm() {
-    }
+    static final String ID = "otp-username-authenticator-form";
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
@@ -58,6 +59,14 @@ public class OtpUsernameForm extends UsernamePasswordForm {
         return form.createLoginUsername();
     }
 
+    /**
+     * Fails current authentication flow challenge and returns response with errors.
+     *
+     * @param context Authentication Flow Context
+     * @param error Error string
+     * @param field Field that caused the erropr
+     * @return Response
+     */
     private Response failureChallenge(AuthenticationFlowContext context, String error, String field) {
         LoginFormsProvider form = context.form().setExecution(context.getExecution().getId());
         if (error != null) {

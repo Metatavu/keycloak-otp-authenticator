@@ -4,10 +4,52 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <artifactId>fi.metatavu.keycloak</artifactId>
-    <groupId>otp.authenticator</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>otp-authenticator</groupId>
+    <version>1.0.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
+    <name>Keycloak OTP Authenticator</name>
+    <description>Keycloak SMS and Email OTP Authenticator</description>
+    <url>https://github.com/Metatavu/keycloak-otp-authenticator</url>
+
+
+    <licenses>
+        <license>
+            <name>GNU Affero General Public License v3</name>
+            <url>http://www.gnu.org/licenses/agpl-3.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>metatavu</id>
+            <email>devs@metatavu.fi</email>
+            <name>Metatavu Oy</name>
+            <organization>Metatavu Oy</organization>
+            <organizationUrl>https://www.metatavu.fi/</organizationUrl>
+            <roles>
+                <role>Owner</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/Metatavu/keycloak-otp-authenticator/issues</url>
+    </issueManagement>
+
+    <scm>
+        <developerConnection>scm:git:git@github.com:Metatavu/keycloak-otp-authenticator.git</developerConnection>
+        <url>git@github.com:Metatavu/keycloak-otp-authenticator.git</url>
+        <connection>scm:git:git@github.com:Metatavu/keycloak-otp-authenticator.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <organization>
+        <name>Metatavu Oy</name>
+        <url>https://www.metatavu.fi</url>
+    </organization>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,7 +57,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <lombok.version>1.18.22</lombok.version>
-        <keycloak.version>19.0.3</keycloak.version>
+        <keycloak.version>20.0.2</keycloak.version>
         <auto-service.version>1.0.1</auto-service.version>
         <twilio-sdk.version>9.1.4</twilio-sdk.version>
         <libphonenumber.version>8.13.2</libphonenumber.version>
@@ -35,12 +77,6 @@
             <groupId>com.twilio.sdk</groupId>
             <artifactId>twilio</artifactId>
             <version>${twilio-sdk.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <dependency>

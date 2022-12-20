@@ -61,7 +61,40 @@
     display: none;
 }
 
-.otp-strategy-instruction {
+.login-pf-page .card-pf p {
     font-family: 'Open Sans', sans-serif;
     color: #7C7C7C;
+    font-size: 14px;
+    margin: 20px 0px 5px 0px;
+}
+
+.otp-digit-input {
+    box-sizing: border-box;
+    background: #F1F3F5;
+    border: 1px solid #F1F3F5;
+    border-radius: 2px;
+    width: 52.8px;
+    height: 50px;
+    padding: px 0px;
+    font-family: 'Open Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    color: #212529;
+    font-size: 18px;
+}
+
+input.otp-digit-input::-webkit-outer-spin-button,
+input.otp-digit-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number].otp-digit-input {
+  -moz-appearance: textfield;
+}
+.otp-form-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
 }
