@@ -1,0 +1,1 @@
+${msg("emailCodeBody", code)}
