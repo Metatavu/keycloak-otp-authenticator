@@ -19,50 +19,68 @@ import java.util.List;
 public class OtpStrategyFormFactory implements AuthenticatorFactory {
     public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES;
 
+    /**
+     * Creates new OTP Strategy Form
+     *
+     * @param session Keycloak Session
+     * @return OTP Strategy Form
+     */
+    @Override
     public Authenticator create(KeycloakSession session) {
         return new OtpStrategyForm();
     }
 
+    @Override
     public void init(Config.Scope config) {
         // Not used in this implementation
     }
 
+    @Override
     public void postInit(KeycloakSessionFactory factory) {
         // Not used in this implementation
     }
 
+    @Override
     public void close() {
         // Not used in this implementation
     }
 
+    @Override
     public String getId() {
         return OtpStrategyForm.ID;
     }
 
+    @Override
     public String getReferenceCategory() {
         return null;
     }
 
+    @Override
     public boolean isConfigurable() {
         return false;
     }
 
+    @Override
     public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
         return REQUIREMENT_CHOICES;
     }
 
+    @Override
     public String getDisplayType() {
         return "OTP Strategy Form";
     }
 
+    @Override
     public String getHelpText() {
         return "Selects OTP strategy.";
     }
 
+    @Override
     public List<ProviderConfigProperty> getConfigProperties() {
         return new ArrayList<>();
     }
 
+    @Override
     public boolean isUserSetupAllowed() {
         return false;
     }
