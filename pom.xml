@@ -19,6 +19,8 @@
         <auto-service.version>1.0.1</auto-service.version>
         <twilio-sdk.version>9.1.4</twilio-sdk.version>
         <libphonenumber.version>8.13.2</libphonenumber.version>
+        <sonar.organization>metatavu-oy</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
