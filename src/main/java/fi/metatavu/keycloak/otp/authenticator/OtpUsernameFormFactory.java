@@ -9,6 +9,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,12 +24,15 @@ public class OtpUsernameFormFactory implements AuthenticatorFactory {
     }
 
     public void init(Config.Scope config) {
+        // Not used in this implementation
     }
 
     public void postInit(KeycloakSessionFactory factory) {
+        // Not used in this implementation
     }
 
     public void close() {
+        // Not used in this implementation
     }
 
     public String getId() {
@@ -56,7 +60,7 @@ public class OtpUsernameFormFactory implements AuthenticatorFactory {
     }
 
     public List<ProviderConfigProperty> getConfigProperties() {
-        return null;
+        return new ArrayList<>();
     }
 
     public boolean isUserSetupAllowed() {

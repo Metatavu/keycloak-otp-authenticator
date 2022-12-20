@@ -79,7 +79,7 @@ public class OtpCodeAuthenticatorFormFactory implements AuthenticatorFactory {
     public String getId() {
         return OtpCodeAuthenticatorForm.ID;
     }
-    private static final List<ProviderConfigProperty> configProperties = new ArrayList<ProviderConfigProperty>();
+    private static final List<ProviderConfigProperty> configProperties = new ArrayList<>();
 
     static {
         ProviderConfigProperty otpCodeLengthProperty = new ProviderConfigProperty();

@@ -1,8 +1,6 @@
 package fi.metatavu.keycloak.otp.authenticator;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import org.apache.commons.collections4.MultiValuedMap;
-import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.authenticators.browser.UsernamePasswordForm;
@@ -15,7 +13,6 @@ import org.keycloak.models.utils.FormMessage;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Authenticator for initiating OTP login with phone number

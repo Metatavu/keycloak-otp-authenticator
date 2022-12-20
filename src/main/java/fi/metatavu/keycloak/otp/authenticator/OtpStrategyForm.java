@@ -7,11 +7,9 @@ import org.keycloak.forms.login.LoginFormsProvider;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
-import org.keycloak.models.utils.FormMessage;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 /**
  * Authenticator providing a form for selecting Email or SMS OTP
@@ -20,8 +18,8 @@ import java.util.List;
 public class OtpStrategyForm implements Authenticator {
 
     static final String ID = "otp-strategy-form";
-    private final String EMAIL_FORM_KEY = "email";
-    private final String SMS_FORM_KEY = "sms";
+    private static final String EMAIL_FORM_KEY = "email";
+    private static final String SMS_FORM_KEY = "sms";
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
