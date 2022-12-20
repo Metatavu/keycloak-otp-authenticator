@@ -22,16 +22,6 @@
     display: none;
 }
 
-.login-pf-header::before {
-   content: '';
-   height: 10rem;
-   display: block;
-   background-size: 20rem;
-   background-position: center;
-   background-repeat: no-repeat;
-   background-image: url("../img/votech_logo.svg");
- }
-
 .pf-c-button.pf-m-primary {
     background: linear-gradient(90deg, #752DF0 0%, #302692 100%);
     border-radius: 46px;
