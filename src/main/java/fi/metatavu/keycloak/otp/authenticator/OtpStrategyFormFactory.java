@@ -18,20 +18,20 @@ import java.util.List;
 public class OtpStrategyFormFactory implements AuthenticatorFactory {
     public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES;
 
-    public OtpStrategyFormFactory() {
-    }
-
     public Authenticator create(KeycloakSession session) {
         return new OtpStrategyForm();
     }
 
     public void init(Config.Scope config) {
+        // Not used in this implementation
     }
 
     public void postInit(KeycloakSessionFactory factory) {
+        // Not used in this implementation
     }
 
     public void close() {
+        // Not used in this implementation
     }
 
     public String getId() {

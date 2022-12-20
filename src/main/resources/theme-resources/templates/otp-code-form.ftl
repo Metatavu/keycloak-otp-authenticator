@@ -11,6 +11,9 @@
                         <div class="${properties.customFormGroupClass!}">
                         <#list 1..codeLength as item>
                             <input class="${properties.customInputClass}"
+                                tabindex="${item}"
+                                maxlength=1
+                                minlength=1
                                 name="code-${item}"
                                 required
                                 type="number"/>
@@ -23,15 +26,12 @@
                         </div>
 
                         <div id="kc-form-buttons" class="${properties.kcFormGroupClass!}">
-                            <input tabindex="4"
-                                   class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
-                                   name="otpCode" id="kc-login" type="submit" value="${msg("doSubmit")}"/>
-                            <input tabindex="4"
-                                   class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
-                                   name="resendCode" id="kc-login" type="submit" value="${msg("resendCode")}"/>
-                            <input tabindex="4"
-                                   class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
-                                   name="cancel" id="kc-login" type="submit" value="${msg("doCancel")}"/>
+                            <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
+                                   name="otpCode" id="submit-otp-code" type="submit" value="${msg("doSubmit")}"/>
+                            <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
+                                   name="resendCode" id="resend-otp-code" type="submit" value="${msg("resendCode")}"/>
+                            <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
+                                   name="cancel" id="cancel" type="submit" value="${msg("doCancel")}"/>
                         </div>
                     </form>
                 </#if>

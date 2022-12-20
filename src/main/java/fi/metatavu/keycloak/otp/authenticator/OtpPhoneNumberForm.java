@@ -132,7 +132,7 @@ public class OtpPhoneNumberForm extends UsernamePasswordForm {
      * @return Response from template
      */
     private Response createPhoneNumberForm(LoginFormsProvider form) {
-        return form.createForm("phone-number-form.ftl");
+        return form.createForm("otp-phone-number-form.ftl");
     }
 
     /**

@@ -62,14 +62,17 @@ public class OtpCodeAuthenticatorFormFactory implements AuthenticatorFactory {
 
     @Override
     public void init(Config.Scope scope) {
+        // Not used in this implementation
     }
 
     @Override
     public void postInit(KeycloakSessionFactory keycloakSessionFactory) {
+        // Not used in this implementation
     }
 
     @Override
     public void close() {
+        // Not used in this implementation
     }
 
     @Override
@@ -79,8 +82,7 @@ public class OtpCodeAuthenticatorFormFactory implements AuthenticatorFactory {
     private static final List<ProviderConfigProperty> configProperties = new ArrayList<ProviderConfigProperty>();
 
     static {
-        ProviderConfigProperty otpCodeLengthProperty;
-        otpCodeLengthProperty = new ProviderConfigProperty();
+        ProviderConfigProperty otpCodeLengthProperty = new ProviderConfigProperty();
         otpCodeLengthProperty.setName(OtpConstants.OTP_CODE_LENGTH_CONFIG);
         otpCodeLengthProperty.setDefaultValue(6);
         otpCodeLengthProperty.setLabel("OTP Code Length");
